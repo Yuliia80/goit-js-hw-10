@@ -4,30 +4,28 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SlimSelect from 'slim-select'
 import 'slim-select/dist/slimselect.css';
 
-
 const ref = {
     selector: document.querySelector('.breed-select'),
-    divCatInfo: document.querySelector('.cat-info'),
+    divCatInfo: document.querySelector('div'),
     loader: document.querySelector('.loader'),
     error: document.querySelector('.error'),
 };
 const { selector, divCatInfo, loader, error } = ref;
 
+
 loader.classList.replace('loader', 'is-hidden');
 error.classList.add('is-hidden');
 divCatInfo.classList.add('is-hidden');
 
-let arrBreedsId = [];
+
 fetchBreeds()
 .then(data => {
-    data.forEach(element => {
-        arrBreedsId.push({text: element.name, value: element.id});
+    const markup = data.map(({id, name})=>`option value${id}>${name}</option>`).join('');
+    selector.innerHTML = markup;
     });
     new SlimSelect({
-        select: selector,
-        data: arrBreedsId
-    });
-    })
+        select: selector 
+    })  
 .catch(onFetchError);
 
 selector.addEventListener('change', onSelectBreed);
@@ -43,9 +41,9 @@ function onSelectBreed(event) {
         loader.classList.replace('loader', 'is-hidden');
         selector.classList.remove('is-hidden');
         const { url, breeds } = data[0];
-        
-        divCatInfo.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`
         divCatInfo.classList.remove('is-hidden');
+        divCatInfo.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`
+        
     })
     .catch(onFetchError);
 };
