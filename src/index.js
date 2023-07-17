@@ -18,14 +18,15 @@ error.classList.add('is-hidden');
 divCatInfo.classList.add('is-hidden');
 
 
+// let arrBreedsId = [];
 fetchBreeds()
 .then(data => {
-    const markup = data.map(({id, name})=>`option value${id}>${name}</option>`).join('');
+    const markup = data.map(({id, name})=>`<option value=${id}>${name}</option>`).join('');
     selector.innerHTML = markup;
-    });
     new SlimSelect({
         select: selector 
-    })  
+    })
+})
 .catch(onFetchError);
 
 selector.addEventListener('change', onSelectBreed);
@@ -43,7 +44,7 @@ function onSelectBreed(event) {
         const { url, breeds } = data[0];
         divCatInfo.classList.remove('is-hidden');
         divCatInfo.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`
-        
+  
     })
     .catch(onFetchError);
 };
